@@ -15,6 +15,7 @@ import { parseEventLogs } from 'viem'
 import { OracleFactories, ComposedOracleFactories } from '@/utils/addresses'
 import { OracleFactoryAbi } from '@/utils/abi/OracleFactory'
 import { ComposedOracleFactoryAbi } from '@/utils/abi/ComposedOracleFactory'
+import { percentToQuorum } from '@/utils/governance'
 import TokenSelector from '@/components/TokenSelector'
 import { useOracles } from '@/hooks/useOracles'
 
@@ -240,7 +241,7 @@ export default function CreateOracleIntegrated() {
       description || "No description provided",                                   // description
       (weightToken || "0x0000000000000000000000000000000000000000") as `0x${string}`, // weightToken
       BigInt(Math.round(Number(halfLifeSeconds || 0))),                                       // halfLifeSeconds
-      BigInt(Math.round(Number(quorumPercent || 0) * 100)),                                   // q (percentage -> basis points)
+      percentToQuorum(quorumPercent),                                                         // q (percentage -> 1e5 scale)
       BigInt(Math.round(Number(depositLock || 0))),                                           // depositLockingPeriod
       BigInt(Math.round(Number(withdrawLock || 0))),                                          // withdrawalLockingPeriod
       BigInt(Math.round(Number(rewardPercent || 0) * 1000)),                                  // rewardBps (percentage -> 1e5 scale)
@@ -996,7 +997,7 @@ export default function CreateOracleIntegrated() {
                     </button>
                     {showTooltip === 'quorumBps' && (
                       <div className="absolute bottom-full mb-2 left-0 z-50 bg-zinc-950 border border-white/10 text-white font-mono text-[9.5px] rounded-lg p-2.5 shadow-xl max-w-xs pointer-events-none">
-                        Minimum percentage of staked token participation required for governance actions (e.g., 20% = 2,000 basis points).
+                        Minimum percentage of staked token participation required for governance actions (e.g., 20% = 20,000 / 100,000).
                       </div>
                     )}
                   </div>

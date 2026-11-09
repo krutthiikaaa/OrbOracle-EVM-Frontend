@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label"
 import { useOracle } from "@/hooks/useOracles"
 import { useToast } from "@/hooks/use-toast"
 import { OracleAbi } from "@/utils/abi/Oracle"
+import { formatQuorumPercentage } from "@/utils/governance"
 import {
   ArrowLeft,
   Clock,
@@ -601,9 +602,8 @@ export default function OracleInteractionPage() {
       const halfLife = Number(halfLifeSecondsData as bigint)
       setHalfLifeSeconds(`${halfLife}s`)
     }
-    if (quorumData) {
-      const quorum = Number(quorumData as bigint)
-      setQuorumPercentage(`${(quorum / 100).toFixed(1)}%`) // Convert from basis points to percentage
+    if (quorumData !== undefined && quorumData !== null) {
+      setQuorumPercentage(formatQuorumPercentage(quorumData as bigint))
     }
     if (operationLockingPeriodData) {
       const operationLock = Number(operationLockingPeriodData as bigint)
